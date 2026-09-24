@@ -1,0 +1,239 @@
+{
+  "feature_names": [
+    "age",
+    "gender",
+    "height",
+    "weight",
+    "ap_hi",
+    "ap_lo",
+    "smoke",
+    "alco",
+    "active",
+    "bmi",
+    "cholesterol_2",
+    "cholesterol_3",
+    "gluc_2",
+    "gluc_3"
+  ],
+  "scaling_params": {
+    "age": {
+      "min": 30.0,
+      "max": 65.0
+    },
+    "height": {
+      "min": 145.0,
+      "max": 190.0
+    },
+    "weight": {
+      "min": 45.0,
+      "max": 115.0
+    },
+    "ap_hi": {
+      "min": 90.0,
+      "max": 200.0
+    },
+    "ap_lo": {
+      "min": 60.0,
+      "max": 150.0
+    },
+    "bmi": {
+      "min": 16.0,
+      "max": 45.0
+    }
+  },
+  "benchmark_summary": [
+    {
+      "model": "Hybrid Bagging+Boosting Ensemble",
+      "paradigm": "Hybrid",
+      "accuracy": "73.97%",
+      "accuracy_val": 0.7397,
+      "precision": "75.91%",
+      "recall": "69.45%",
+      "f1": "72.54%",
+      "f1_val": 0.7254,
+      "roc_auc": "80.54%",
+      "roc_auc_val": 0.8054,
+      "training_time_sec": 2.33,
+      "inference_latency_ms": 0.0217,
+      "is_best": true
+    },
+    {
+      "model": "Random Forest",
+      "paradigm": "Bagging",
+      "accuracy": "73.75%",
+      "accuracy_val": 0.7375,
+      "precision": "75.95%",
+      "recall": "68.72%",
+      "f1": "72.16%",
+      "f1_val": 0.7216,
+      "roc_auc": "80.38%",
+      "roc_auc_val": 0.8038,
+      "training_time_sec": 1.2,
+      "inference_latency_ms": 0.0107,
+      "is_best": false
+    },
+    {
+      "model": "Bagging (Decision Tree)",
+      "paradigm": "Bagging",
+      "accuracy": "73.68%",
+      "accuracy_val": 0.7368,
+      "precision": "75.24%",
+      "recall": "69.79%",
+      "f1": "72.41%",
+      "f1_val": 0.7241,
+      "roc_auc": "80.11%",
+      "roc_auc_val": 0.8011,
+      "training_time_sec": 4.94,
+      "inference_latency_ms": 0.0319,
+      "is_best": false
+    },
+    {
+      "model": "Extra Trees",
+      "paradigm": "Bagging",
+      "accuracy": "73.67%",
+      "accuracy_val": 0.7367,
+      "precision": "76.41%",
+      "recall": "67.70%",
+      "f1": "71.80%",
+      "f1_val": 0.718,
+      "roc_auc": "80.08%",
+      "roc_auc_val": 0.8008,
+      "training_time_sec": 0.78,
+      "inference_latency_ms": 0.0117,
+      "is_best": false
+    },
+    {
+      "model": "XGBoost",
+      "paradigm": "Boosting",
+      "accuracy": "74.09%",
+      "accuracy_val": 0.7409,
+      "precision": "75.82%",
+      "recall": "69.95%",
+      "f1": "72.77%",
+      "f1_val": 0.7277,
+      "roc_auc": "80.54%",
+      "roc_auc_val": 0.8054,
+      "training_time_sec": 0.59,
+      "inference_latency_ms": 0.0018,
+      "is_best": false
+    },
+    {
+      "model": "Hist Gradient Boosting",
+      "paradigm": "Boosting",
+      "accuracy": "73.89%",
+      "accuracy_val": 0.7389,
+      "precision": "75.82%",
+      "recall": "69.37%",
+      "f1": "72.45%",
+      "f1_val": 0.7245,
+      "roc_auc": "80.47%",
+      "roc_auc_val": 0.8047,
+      "training_time_sec": 0.59,
+      "inference_latency_ms": 0.0071,
+      "is_best": false
+    },
+    {
+      "model": "Gradient Boosting",
+      "paradigm": "Boosting",
+      "accuracy": "74.21%",
+      "accuracy_val": 0.7421,
+      "precision": "76.02%",
+      "recall": "69.96%",
+      "f1": "72.87%",
+      "f1_val": 0.7287,
+      "roc_auc": "80.46%",
+      "roc_auc_val": 0.8046,
+      "training_time_sec": 7.78,
+      "inference_latency_ms": 0.0044,
+      "is_best": false
+    },
+    {
+      "model": "AdaBoost",
+      "paradigm": "Boosting",
+      "accuracy": "72.45%",
+      "accuracy_val": 0.7245,
+      "precision": "78.04%",
+      "recall": "61.68%",
+      "f1": "68.90%",
+      "f1_val": 0.689,
+      "roc_auc": "79.10%",
+      "roc_auc_val": 0.791,
+      "training_time_sec": 1.93,
+      "inference_latency_ms": 0.0082,
+      "is_best": false
+    }
+  ],
+  "feature_importances": [
+    {
+      "feature": "ap_hi",
+      "importance_pct": 42.05,
+      "importance_str": "42.1%"
+    },
+    {
+      "feature": "ap_lo",
+      "importance_pct": 16.62,
+      "importance_str": "16.6%"
+    },
+    {
+      "feature": "age",
+      "importance_pct": 11.38,
+      "importance_str": "11.4%"
+    },
+    {
+      "feature": "cholesterol_3",
+      "importance_pct": 9.59,
+      "importance_str": "9.6%"
+    },
+    {
+      "feature": "bmi",
+      "importance_pct": 4.92,
+      "importance_str": "4.9%"
+    },
+    {
+      "feature": "weight",
+      "importance_pct": 3.6,
+      "importance_str": "3.6%"
+    },
+    {
+      "feature": "height",
+      "importance_pct": 2.42,
+      "importance_str": "2.4%"
+    },
+    {
+      "feature": "cholesterol_2",
+      "importance_pct": 1.9,
+      "importance_str": "1.9%"
+    },
+    {
+      "feature": "active",
+      "importance_pct": 1.87,
+      "importance_str": "1.9%"
+    },
+    {
+      "feature": "gluc_3",
+      "importance_pct": 1.59,
+      "importance_str": "1.6%"
+    },
+    {
+      "feature": "smoke",
+      "importance_pct": 1.38,
+      "importance_str": "1.4%"
+    },
+    {
+      "feature": "alco",
+      "importance_pct": 1.0,
+      "importance_str": "1.0%"
+    },
+    {
+      "feature": "gluc_2",
+      "importance_pct": 0.89,
+      "importance_str": "0.9%"
+    },
+    {
+      "feature": "gender",
+      "importance_pct": 0.8,
+      "importance_str": "0.8%"
+    }
+  ],
+  "updated_at": "2026-09-24 20:25:59"
+}
