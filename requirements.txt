@@ -1,0 +1,3 @@
+# Root requirements file redirecting to backend/requirements.txt
+# This ensures builds succeed whether Root Directory is set to 'backend' or left at repository root.
+-r backend/requirements.txt
