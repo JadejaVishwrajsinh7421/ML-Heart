@@ -1,0 +1,53 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Render Blueprint Specification (render.yaml)
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Connect this GitHub repository to Render (Blueprints tab) to deploy both the
+# Python ML Backend and React/Vite Frontend with a single click.
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  # ───────────────────────────────────────────────────────────────────────────
+  # 1. BACKEND API SERVICE (Python Flask + Gunicorn)
+  # ───────────────────────────────────────────────────────────────────────────
+  - type: web
+    name: ml-heart-backend
+    runtime: python
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --threads 2 --timeout 120
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: FLASK_ENV
+        value: production
+      - key: LOKY_MAX_CPU_COUNT
+        value: "2"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 2. FRONTEND STATIC SITE (React + Vite + TailwindCSS)
+  # ───────────────────────────────────────────────────────────────────────────
+  - type: web
+    name: ml-heart-frontend
+    runtime: static
+    plan: free
+    region: oregon
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    autoDeploy: true
+    routes:
+      # Single-Page Application (SPA) client-side routing fallback
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: ml-heart-backend
+          property: host

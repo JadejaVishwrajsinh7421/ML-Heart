@@ -4,7 +4,22 @@
  * with automatic zero-downtime client-side fallback including corrective medical advice.
  */
 
-const API_BASE_URL = 'http://127.0.0.1:5000';
+// Resolve Backend API URL:
+// 1. Checks Vite environment variable VITE_API_URL (populated on Render or via .env)
+// 2. Prepends https:// if Render passes the raw domain host
+// 3. Defaults to localhost:5000 in dev or relative path in production
+const resolveApiBase = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
+    const trimmed = envUrl.trim().replace(/\/+$/, '');
+    return trimmed.startsWith('http://') || trimmed.startsWith('https://')
+      ? trimmed
+      : `https://${trimmed}`;
+  }
+  return import.meta.env.DEV ? 'http://127.0.0.1:5000' : '';
+};
+
+const API_BASE_URL = resolveApiBase();
 
 // ─── Corrective Advice Generator (client-side fallback) ───────────────────────
 
@@ -265,11 +280,16 @@ export const calculateCardioRisk = (inputs) => {
 
 // ─── Backend Health Check ─────────────────────────────────────────────────────
 
+// ─── Backend Health Check ─────────────────────────────────────────────────────
+
 export const checkBackendHealth = async () => {
-  const endpoints = [`${API_BASE_URL}/api/health`, '/api/health'];
+  const endpoints = API_BASE_URL
+    ? [`${API_BASE_URL}/api/health`, '/api/health']
+    : ['/api/health', 'http://127.0.0.1:5000/api/health'];
+
   for (const url of endpoints) {
     try {
-      const res = await fetch(url, { signal: AbortSignal.timeout(1500) });
+      const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
       if (res.ok) {
         const data = await res.json();
         return { online: true, ...data };
@@ -284,7 +304,9 @@ export const checkBackendHealth = async () => {
 // ─── Primary Prediction API Call ──────────────────────────────────────────────
 
 export const predictCardioRiskApi = async (inputs) => {
-  const endpoints = [`${API_BASE_URL}/api/predict`, '/api/predict'];
+  const endpoints = API_BASE_URL
+    ? [`${API_BASE_URL}/api/predict`, '/api/predict']
+    : ['/api/predict', 'http://127.0.0.1:5000/api/predict'];
 
   for (const url of endpoints) {
     try {
@@ -292,7 +314,7 @@ export const predictCardioRiskApi = async (inputs) => {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(inputs),
-        signal:  AbortSignal.timeout(4000),
+        signal:  AbortSignal.timeout(30000), // 30s timeout accommodates Render free-tier cold starts
       });
 
       if (response.ok) {
@@ -329,10 +351,13 @@ export const predictCardioRiskApi = async (inputs) => {
 // ─── Model Benchmarks ─────────────────────────────────────────────────────────
 
 export const fetchModelBenchmarks = async () => {
-  const endpoints = [`${API_BASE_URL}/api/models`, '/api/models'];
+  const endpoints = API_BASE_URL
+    ? [`${API_BASE_URL}/api/models`, '/api/models']
+    : ['/api/models', 'http://127.0.0.1:5000/api/models'];
+
   for (const url of endpoints) {
     try {
-      const response = await fetch(url, { signal: AbortSignal.timeout(2000) });
+      const response = await fetch(url, { signal: AbortSignal.timeout(6000) });
       if (response.ok) {
         const data = await response.json();
         if (data.success && data.models) return data.models;

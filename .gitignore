@@ -24,13 +24,14 @@ venv.bak/
 .ipynb_checkpoints/
 *.ipynb_checkpoints/
 
-# ─── ML Models (large binary files — regenerate with trainer.py) ──────────────
-backend/saved_models/*.joblib
+# ─── ML Models ────────────────────────────────────────────────────────────────
+# Large temporary weights are ignored, but compressed joblib models & metadata
+# are kept so Render/GitHub deployments have pre-trained inference artifacts ready.
 backend/saved_models/*.pkl
 backend/saved_models/*.h5
 backend/saved_models/*.pt
 backend/saved_models/*.pth
-# Keep metadata.json (small, human-readable benchmark results)
+!backend/saved_models/*.joblib
 !backend/saved_models/metadata.json
 
 # ─── Dataset files (large CSVs — not for version control) ────────────────────
@@ -52,6 +53,7 @@ frontend/coverage/
 .env.test.local
 .env.production.local
 *.env
+!*.env.example
 
 # ─── OS & Editor ──────────────────────────────────────────────────────────────
 .DS_Store

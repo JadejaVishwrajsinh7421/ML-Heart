@@ -52,11 +52,18 @@ SCALING_PARAMS = {
 
 
 def load_data():
-    if not os.path.exists(DATA_PATH):
-        raise FileNotFoundError(f"Dataset not found at: {DATA_PATH}")
+    candidate_paths = [
+        os.path.join(PROJECT_DIR, "cleaned_cardio.csv"),
+        os.path.join(PROJECT_DIR, "archive", "cleaned_cardio.csv"),
+        os.path.join(BASE_DIR, "cleaned_cardio.csv"),
+        os.path.join(BASE_DIR, "archive", "cleaned_cardio.csv"),
+    ]
+    data_path = next((p for p in candidate_paths if os.path.exists(p)), None)
+    if not data_path:
+        raise FileNotFoundError(f"Dataset not found in candidate paths: {candidate_paths}")
 
-    print(f"[*] Loading dataset from {DATA_PATH}...")
-    df = pd.read_csv(DATA_PATH)
+    print(f"[*] Loading dataset from {data_path}...")
+    df = pd.read_csv(data_path)
     X = df.drop(columns=["cardio"])
     y = df["cardio"]
     print(f"[*] Total dataset size: {len(df):,} samples with {X.shape[1]} features.")
@@ -268,17 +275,19 @@ def train_and_benchmark():
         )
     importance_list = sorted(importance_list, key=lambda x: x["importance_pct"], reverse=True)
 
-    # Save artifacts
-    print("\n[*] Serializing trained models and metadata to saved_models/ ...")
-    joblib.dump(voting_ensemble, os.path.join(SAVED_MODELS_DIR, "best_ensemble.joblib"))
-    joblib.dump(trained_models["XGBoost"], os.path.join(SAVED_MODELS_DIR, "xgboost_model.joblib"))
+    # Save artifacts with compression (optimal for GitHub repo & Render deployments)
+    print("\n[*] Serializing trained models and metadata to saved_models/ (compressed)...")
+    joblib.dump(voting_ensemble, os.path.join(SAVED_MODELS_DIR, "best_ensemble.joblib"), compress=3)
+    joblib.dump(trained_models["XGBoost"], os.path.join(SAVED_MODELS_DIR, "xgboost_model.joblib"), compress=3)
     joblib.dump(
         trained_models["Random Forest"],
         os.path.join(SAVED_MODELS_DIR, "random_forest_model.joblib"),
+        compress=3,
     )
     joblib.dump(
         trained_models["Hist Gradient Boosting"],
         os.path.join(SAVED_MODELS_DIR, "hist_gb_model.joblib"),
+        compress=3,
     )
 
     # Save feature names and scaling parameters
